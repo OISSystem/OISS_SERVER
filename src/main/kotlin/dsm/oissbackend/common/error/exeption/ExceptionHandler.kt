@@ -67,7 +67,7 @@ class ExceptionHandler() {
         return ResponseEntity(
             ErrorResponse.of(
                 status = GlobalErrorCode.BAD_REQUEST.status,
-                message = GlobalErrorCode.BAD_REQUEST.message,
+                message = GlobalErrorCode.BAD_REQUEST.message, // HttpMessageNotReadableException는 외부로 공개되면 안됨
             ),
             HttpStatus.valueOf(GlobalErrorCode.BAD_REQUEST.status)
         )
