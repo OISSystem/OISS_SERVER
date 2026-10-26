@@ -23,6 +23,17 @@ class ExceptionHandler() {
             HttpStatus.valueOf(exception.status))
     }
 
+    @ExceptionHandler(CustomException::class)
+    fun handleCustomExceptionHandler(exception: CustomException, request: WebRequest): ResponseEntity<ErrorResponse> {
+        return ResponseEntity(
+            ErrorResponse.of(
+                status = exception.httpStatus.toString().toInt(),
+                message = exception.message,
+            ),
+            exception.httpStatus
+        )
+    }
+
     @ExceptionHandler(BindException::class)
     fun BindExceptionHandler(exception: BindException, request: WebRequest): ResponseEntity<ValidationErrorResponse> {
         return ResponseEntity(
