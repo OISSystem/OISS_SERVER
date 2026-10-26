@@ -1,0 +1,10 @@
+package dsm.oissbackend.common.error.exeption
+
+enum class GlobalErrorCode(
+    override val status: Int,
+    override val message: String
+): ErrorCode {
+
+    // internal
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+}
