@@ -6,5 +6,8 @@ enum class GlobalErrorCode(
 ): ErrorCode {
 
     // internal
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+
+    // Bad Request
+    BAD_REQUEST(400, "Bad Request")
 }
