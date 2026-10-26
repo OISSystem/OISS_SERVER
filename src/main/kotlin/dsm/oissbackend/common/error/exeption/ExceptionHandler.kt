@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.BindException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -69,6 +70,17 @@ class ExceptionHandler() {
                 message = GlobalErrorCode.BAD_REQUEST.message,
             ),
             HttpStatus.valueOf(GlobalErrorCode.BAD_REQUEST.status)
+        )
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun HttpRequestMethodNotSupportedExceptionHandler(exception: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
+        return ResponseEntity(
+            ErrorResponse.of(
+                status = GlobalErrorCode.METHOD_NOT_ALLOWED.status,
+                message = exception.message?: "Method not allowed",
+            ),
+            HttpStatus.valueOf(GlobalErrorCode.INTERNAL_SERVER_ERROR.status)
         )
     }
 
