@@ -55,7 +55,7 @@ class ExceptionHandler() {
         return ResponseEntity(
             ErrorResponse.of(
                 status = GlobalErrorCode.BAD_REQUEST.status,
-                message = exception.message?: "Bad Request",
+                message = GlobalErrorCode.BAD_REQUEST.message,
             ),
             HttpStatus.valueOf(GlobalErrorCode.BAD_REQUEST.status)
         )
