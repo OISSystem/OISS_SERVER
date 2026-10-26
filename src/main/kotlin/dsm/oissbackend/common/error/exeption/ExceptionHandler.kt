@@ -80,7 +80,7 @@ class ExceptionHandler() {
                 status = GlobalErrorCode.METHOD_NOT_ALLOWED.status,
                 message = exception.message?: "Method not allowed",
             ),
-            HttpStatus.valueOf(GlobalErrorCode.INTERNAL_SERVER_ERROR.status)
+            HttpStatus.valueOf(GlobalErrorCode.METHOD_NOT_ALLOWED.status)
         )
     }
 
