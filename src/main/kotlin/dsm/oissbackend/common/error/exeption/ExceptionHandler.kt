@@ -28,7 +28,7 @@ class ExceptionHandler() {
     fun handleCustomExceptionHandler(exception: CustomException, request: WebRequest): ResponseEntity<ErrorResponse> {
         return ResponseEntity(
             ErrorResponse.of(
-                status = exception.httpStatus.toString().toInt(),
+                status = exception.httpStatus.value(),
                 message = exception.message,
             ),
             exception.httpStatus
