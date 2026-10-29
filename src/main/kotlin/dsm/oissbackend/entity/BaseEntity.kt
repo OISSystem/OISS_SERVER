@@ -14,14 +14,14 @@ abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "BIGINT", updatable = false)
     val id: Long = 0
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", columnDefinition = "DATETIME", updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", columnDefinition = "DATETIME")
     val updatedAt: LocalDateTime = LocalDateTime.now()
 }
