@@ -1,4 +1,4 @@
-package dsm.oissbackend.entity
+package dsm.oissbackend.common.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.GeneratedValue

@@ -1,6 +1,6 @@
-package dsm.oissbackend.entity
+package dsm.oissbackend.common.entity
 
-import dsm.oissbackend.entity.enums.Status
+import dsm.oissbackend.common.entity.enums.Status
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.MappedSuperclass

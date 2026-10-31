@@ -1,6 +1,6 @@
 package dsm.oissbackend.oiss.monitor.entity
 
-import dsm.oissbackend.entity.BaseEntity
+import dsm.oissbackend.common.entity.BaseEntity
 import dsm.oissbackend.oiss.monitor.entity.enums.HttpMethod
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

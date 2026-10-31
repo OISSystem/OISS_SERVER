@@ -1,4 +1,4 @@
-package dsm.oissbackend.entity.enums
+package dsm.oissbackend.common.entity.enums
 
 enum class Status(
     val status: String,
