@@ -18,7 +18,7 @@ class MonitorFacade(
     }
 
     fun update(monitor: Monitor): Monitor {
-        if (monitorRepository.existsById(monitor.id)) {
+        if (!monitorRepository.existsById(monitor.id)) {
             throw MonitorNotFoundException
         }
 
