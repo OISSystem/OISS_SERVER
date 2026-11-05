@@ -1,6 +1,6 @@
-package dsm.oissbackend.oiss.monitor.entity
+package dsm.oissbackend.oiss.monitor.persistent.entity
 
-import dsm.oissbackend.oiss.monitor.entity.enums.CredentialLocation
+import dsm.oissbackend.oiss.monitor.persistent.entity.enums.CredentialLocation
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType

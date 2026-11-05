@@ -1,6 +1,6 @@
-package dsm.oissbackend.oiss.monitor.entity
+package dsm.oissbackend.oiss.monitor.persistent.entity
 
-import dsm.oissbackend.oiss.monitor.entity.enums.MatchType
+import dsm.oissbackend.oiss.monitor.persistent.entity.enums.SchemaFieldType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -12,21 +12,28 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 @Entity
-@Table(name = "tbl_monitor_error_pattern")
-class MonitorErrorPattern(
+@Table(
+    name = "tbl_monitor_schema_field",
+    uniqueConstraints = [
+        UniqueConstraint(name = "uk_schema_field_monitor_path", columnNames = ["monitor_id", "path"])
+    ]
+)
+class MonitorSchemaField(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monitor_id", nullable = false)
-    val monitor: Monitor,
+    val schema: MonitorSchema,
+
+    // ex) response.body.items.item[].pm10Value
+    @Column(name = "path", columnDefinition = "VARCHAR(512)", nullable = false)
+    val path: String,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "match_type", nullable = false)
-    val matchType: MatchType,
-
-    @Column(name = "pattern", columnDefinition = "VARCHAR(512)", nullable = false)
-    val pattern: String,
+    @Column(name = "type", nullable = false)
+    val type: SchemaFieldType,
 
 ) {
 

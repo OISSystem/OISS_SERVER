@@ -1,4 +1,4 @@
-package dsm.oissbackend.oiss.monitor.entity
+package dsm.oissbackend.oiss.monitor.persistent.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

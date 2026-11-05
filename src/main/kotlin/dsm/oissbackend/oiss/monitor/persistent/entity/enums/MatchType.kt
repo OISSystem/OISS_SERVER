@@ -1,4 +1,4 @@
-package dsm.oissbackend.oiss.monitor.entity.enums
+package dsm.oissbackend.oiss.monitor.persistent.entity.enums
 
 enum class MatchType(
     val description: String,
