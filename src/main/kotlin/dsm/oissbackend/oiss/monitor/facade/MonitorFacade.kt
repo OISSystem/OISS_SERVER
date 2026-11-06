@@ -1,6 +1,6 @@
 package dsm.oissbackend.oiss.monitor.facade
 
-import dsm.oissbackend.oiss.monitor.exception.errorcode.MonitorNotFoundException
+import dsm.oissbackend.oiss.monitor.exception.MonitorNotFoundException
 import dsm.oissbackend.oiss.monitor.persistent.entity.Monitor
 import dsm.oissbackend.oiss.monitor.persistent.repository.MonitorRepository
 import org.springframework.stereotype.Component
