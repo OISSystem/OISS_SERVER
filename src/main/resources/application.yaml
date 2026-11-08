@@ -1,3 +1,8 @@
 spring:
   application:
     name: OISS-Backend
+
+oiss:
+  util:
+    crypto:
+      secret: ${CRYPTOGRAPH_SECRET}
