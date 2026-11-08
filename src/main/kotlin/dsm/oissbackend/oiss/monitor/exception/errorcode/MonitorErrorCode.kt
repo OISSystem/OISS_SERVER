@@ -7,4 +7,7 @@ enum class MonitorErrorCode(
     override val message: String
 ): ErrorCode {
     NOT_FOUND(404, "Monitor Not Found"),
+    CREDENTIAL_NOT_FOUND(404, "Monitor Credential Not Found"),
+    QUOTA_NOT_FOUND(404, "Monitor Quota Not Found"),
+    SCHEMA_NOT_FOUND(404, "Monitor Schema Not Found"),
 }
