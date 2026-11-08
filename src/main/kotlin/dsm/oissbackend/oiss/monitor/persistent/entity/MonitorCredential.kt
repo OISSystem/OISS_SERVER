@@ -35,10 +35,6 @@ class MonitorCredential(
     @Column(name = "encrypted_value", columnDefinition = "VARBINARY(512)", nullable = false)
     val encryptedValue: ByteArray,
 
-    // 마스터키 식별자
-    @Column(name = "key_id", columnDefinition = "VARCHAR(64)", nullable = false)
-    val keyId: String,
-
     // 마스킹 표시용
     @Column(name = "last4", columnDefinition = "CHAR(4)", nullable = false)
     val last4: String,
