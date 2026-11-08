@@ -24,8 +24,8 @@ class Monitor(
     @Column(name = "http_method", nullable = false)
     val httpMethod: HttpMethod,
 
-    @Column(name = "url", columnDefinition = "VARCHAR(512)", nullable = false)
-    val url: String,
+    @Column(name = "encrypted_url", columnDefinition = "VARCHAR(512)", nullable = false)
+    val encryptedUrl: String,
 
     // POST일 때만 사용
     @Column(name = "request_body", columnDefinition = "TEXT")
