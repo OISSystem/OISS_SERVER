@@ -2,6 +2,7 @@ package dsm.oissbackend.oiss.monitor.service
 
 import dsm.oissbackend.common.utils.CryptoUtil
 import dsm.oissbackend.common.utils.jsonUtils
+import dsm.oissbackend.oiss.monitor.exception.MonitorNotFoundException
 import dsm.oissbackend.oiss.monitor.facade.MonitorCredentialFacade
 import dsm.oissbackend.oiss.monitor.facade.MonitorErrorPatternFacade
 import dsm.oissbackend.oiss.monitor.facade.MonitorFacade
@@ -171,7 +172,17 @@ class MonitorService(
     }
 
     @Transactional
-    fun deleteMonitor(id: Long) {
-        monitorFacade.deleteByMonitorId(id)
+    fun deleteMonitor(monitorId: Long) {
+        monitorFacade.findByMonitorId(monitorId) ?: throw MonitorNotFoundException
+
+        monitorHeaderFacade.deleteAllByMonitorId(monitorId)
+        monitorErrorPatternFacade.deleteAllByMonitorId(monitorId)
+        monitorQuotaPatternFacade.deleteAllByMonitorId(monitorId)
+        monitorJsonPathRuleFacade.deleteAllByMonitorId(monitorId)
+        monitorCredentialFacade.deleteByMonitorId(monitorId)
+        monitorQuotaFacade.deleteByMonitorId(monitorId)
+        monitorSchemaFacade.deleteByMonitorId(monitorId)
+
+        monitorFacade.deleteByMonitorId(monitorId)
     }
 }
