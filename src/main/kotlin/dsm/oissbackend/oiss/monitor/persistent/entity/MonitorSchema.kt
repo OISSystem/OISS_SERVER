@@ -26,6 +26,9 @@ class MonitorSchema(
     @Enumerated(EnumType.STRING)
     @Column(name = "source", nullable = false)
     val source: SchemaSource,
+
+    @Column(name = "request_body", nullable = false)
+    val requestBody: String,
 ) {
 
     @Id
