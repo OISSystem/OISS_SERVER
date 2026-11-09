@@ -1,4 +1,4 @@
-package dsm.oissbackend.common.utils.cryptography
+package dsm.oissbackend.common.utils
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

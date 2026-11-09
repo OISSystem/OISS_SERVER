@@ -1,4 +1,4 @@
-package dsm.oissbackend.common.utils.jsonCunverter
+package dsm.oissbackend.common.utils
 
 import org.json.JSONObject
 import org.springframework.stereotype.Component
