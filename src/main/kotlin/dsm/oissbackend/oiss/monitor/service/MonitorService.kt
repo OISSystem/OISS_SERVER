@@ -169,4 +169,9 @@ class MonitorService(
             id = savedMonitor.id
         )
     }
+
+    @Transactional
+    fun deleteMonitor(id: Long) {
+        monitorFacade.deleteByMonitorId(id)
+    }
 }
