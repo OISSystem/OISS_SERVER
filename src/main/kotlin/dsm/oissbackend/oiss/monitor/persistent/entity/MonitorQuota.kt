@@ -8,6 +8,8 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.MapsId
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.time.LocalTime
 
 @Entity
@@ -31,6 +33,9 @@ class MonitorQuota(
     @Column(name = "reset_timezone", columnDefinition = "VARCHAR(50)", nullable = false)
     val resetTimezone: String = "Asia/Seoul",
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "exhausted_http_statuses", columnDefinition = "json")
+    var exhaustedHttpStatuses: List<Int> = emptyList()
 ) {
 
     @Id
