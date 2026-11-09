@@ -18,7 +18,7 @@ class MonitorController(
 ) {
 
     @PostMapping()
-    fun CreateMonitor(
+    fun createMonitor(
         @RequestBody request: CreateMonitorRequest
     ): ResponseEntity<CreateMonitorResponse> {
         return ResponseEntity.ok(
@@ -27,7 +27,7 @@ class MonitorController(
     }
 
     @DeleteMapping("/{monitorId}")
-    fun DeleteMonitor(@PathVariable monitorId: Long): ResponseEntity<Void> {
+    fun deleteMonitor(@PathVariable monitorId: Long): ResponseEntity<Void> {
         monitorService.deleteMonitor(monitorId)
         return ResponseEntity.noContent().build()
     }
