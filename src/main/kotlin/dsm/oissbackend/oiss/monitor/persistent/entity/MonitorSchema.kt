@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.MapsId
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
+import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
 @Entity
@@ -25,12 +26,12 @@ class MonitorSchema(
     @Enumerated(EnumType.STRING)
     @Column(name = "source", nullable = false)
     val source: SchemaSource,
-
-    @Column(name = "generated_at", nullable = false)
-    val generatedAt: LocalDateTime,
-
 ) {
 
     @Id
     val monitorId: Long = 0
+
+    @CreationTimestamp
+    @Column(name = "created_at", columnDefinition = "DATETIME", updatable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now()
 }
