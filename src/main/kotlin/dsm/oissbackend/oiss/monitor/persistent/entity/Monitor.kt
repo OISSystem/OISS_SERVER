@@ -15,43 +15,63 @@ class Monitor(
     // user_id
 
     @Column(name = "name", columnDefinition = "VARCHAR(512)", nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(name = "provider", columnDefinition = "VARCHAR(512)", nullable = false)
-    val provider: String,
+    var provider: String,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "http_method", nullable = false)
-    val httpMethod: HttpMethod,
+    var httpMethod: HttpMethod,
 
     @Column(name = "encrypted_url", columnDefinition = "VARCHAR(512)", nullable = false)
-    val encryptedUrl: String,
+    var encryptedUrl: String,
 
     // POST일 때만 사용
     @Column(name = "request_body", columnDefinition = "TEXT")
-    val requestBody: String?,
+    var requestBody: String?,
 
     @Column(name = "check_interval_sec", columnDefinition = "INT", nullable = false)
-    val checkIntervalSeconds: Int,
+    var checkIntervalSeconds: Int,
 
     @Column(name = "failure_threshold", columnDefinition = "TINYINT", nullable = false)
-    val failureThreshold: Int,
+    var failureThreshold: Int,
 
     @Column(name = "recovery_threshold", columnDefinition = "TINYINT", nullable = false)
-    val recoveryThreshold: Int,
+    var recoveryThreshold: Int,
 
     @Column(name = "timeout_ms", columnDefinition = "INT", nullable = false)
-    val timeoutMs: Int,
+    var timeoutMs: Int,
 
     @Column(name = "latency_warn_ms", columnDefinition = "INT", nullable = false)
-    val latencyWarnMs: Int,
+    var latencyWarnMs: Int,
 
     @Column(name = "enabled", columnDefinition = "BOOLEAN", nullable = false)
-    val enabled: Boolean,
+    var enabled: Boolean,
 
 ) : BaseEntity() {
 
-    companion object {
-
+    fun update(
+        name: String,
+        httpMethod: HttpMethod,
+        encryptedUrl: String,
+        requestBody: String?,
+        checkIntervalSeconds: Int,
+        failureThreshold: Int,
+        recoveryThreshold: Int,
+        timeoutMs: Int,
+        latencyWarnMs: Int,
+        enabled: Boolean,
+    ) {
+        this.name = name
+        this.httpMethod = httpMethod
+        this.encryptedUrl = encryptedUrl
+        this.requestBody = requestBody
+        this.checkIntervalSeconds = checkIntervalSeconds
+        this.failureThreshold = failureThreshold
+        this.recoveryThreshold = recoveryThreshold
+        this.timeoutMs = timeoutMs
+        this.latencyWarnMs = latencyWarnMs
+        this.enabled = enabled
     }
 }
