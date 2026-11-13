@@ -13,7 +13,7 @@ class MonitorFacade(
         return monitorRepository.save(monitor)
     }
 
-    fun findByMonitorId(monitorId: Long): Monitor? {
+    fun findByMonitorId(monitorId: Long): Monitor {
         return monitorRepository.findByMonitorId(monitorId) ?: throw MonitorNotFoundException
     }
 
