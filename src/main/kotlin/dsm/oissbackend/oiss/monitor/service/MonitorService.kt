@@ -176,7 +176,7 @@ class MonitorService(
 
     @Transactional
     fun deleteMonitor(monitorId: Long) {
-        monitorFacade.findByMonitorId(monitorId) ?: throw MonitorNotFoundException
+        monitorFacade.findByMonitorId(monitorId)
 
         monitorHeaderFacade.deleteAllByMonitorId(monitorId)
         monitorErrorPatternFacade.deleteAllByMonitorId(monitorId)
