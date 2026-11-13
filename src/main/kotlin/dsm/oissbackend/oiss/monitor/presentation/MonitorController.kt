@@ -40,6 +40,8 @@ class MonitorController(
         @PathVariable monitorId: Long,
         @RequestBody request: UpdateMonitorRequest
     ): ResponseEntity<UpdateMonitorResponse> {
-        TODO()
+        return ResponseEntity.ok(
+            monitorService.updateMonitor(monitorId, request)
+        )
     }
 }

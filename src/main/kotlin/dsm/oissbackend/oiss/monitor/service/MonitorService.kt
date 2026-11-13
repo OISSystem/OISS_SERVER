@@ -21,7 +21,10 @@ import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorQuotaPattern
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorSchema
 import dsm.oissbackend.oiss.monitor.persistent.entity.enums.SchemaSource
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.CreateMonitorRequest
+import dsm.oissbackend.oiss.monitor.presentation.dto.request.UpdateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.CreateMonitorResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.UpdateMonitorResponse
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -184,5 +187,10 @@ class MonitorService(
         monitorSchemaFacade.deleteByMonitorId(monitorId)
 
         monitorFacade.deleteByMonitorId(monitorId)
+    }
+
+    @Transactional
+    fun updateMonitor(monitorId: Long, request: UpdateMonitorRequest): UpdateMonitorResponse {
+        TODO()
     }
 }
