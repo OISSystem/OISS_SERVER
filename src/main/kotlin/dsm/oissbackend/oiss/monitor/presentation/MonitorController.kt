@@ -1,12 +1,15 @@
 package dsm.oissbackend.oiss.monitor.presentation
 
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.CreateMonitorRequest
+import dsm.oissbackend.oiss.monitor.presentation.dto.request.UpdateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.CreateMonitorResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.UpdateMonitorResponse
 import dsm.oissbackend.oiss.monitor.service.MonitorService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -32,4 +35,11 @@ class MonitorController(
         return ResponseEntity.noContent().build()
     }
 
+    @PutMapping("/{monitorId}")
+    fun updateMonitor(
+        @PathVariable monitorId: Long,
+        @RequestBody request: UpdateMonitorRequest
+    ): ResponseEntity<UpdateMonitorResponse> {
+        TODO()
+    }
 }
