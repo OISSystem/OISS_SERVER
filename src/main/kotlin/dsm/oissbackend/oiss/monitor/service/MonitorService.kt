@@ -2,7 +2,6 @@ package dsm.oissbackend.oiss.monitor.service
 
 import dsm.oissbackend.common.utils.CryptoUtil
 import dsm.oissbackend.common.utils.jsonUtils
-import dsm.oissbackend.oiss.monitor.exception.MonitorNotFoundException
 import dsm.oissbackend.oiss.monitor.facade.MonitorCredentialFacade
 import dsm.oissbackend.oiss.monitor.facade.MonitorErrorPatternFacade
 import dsm.oissbackend.oiss.monitor.facade.MonitorFacade
@@ -24,7 +23,7 @@ import dsm.oissbackend.oiss.monitor.presentation.dto.request.CreateMonitorReques
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.UpdateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.CreateMonitorResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.UpdateMonitorResponse
-import org.springframework.http.ResponseEntity
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -46,14 +45,14 @@ class MonitorService(
 
     @Transactional
     fun createMonitor(request: CreateMonitorRequest): CreateMonitorResponse {
-        val hashedUrl = cryptoUtil.encrypt(request.url)
+        val encryptedUrl = cryptoUtil.encrypt(request.url)
 
         // Monitor
         val monitor = Monitor(
             name = request.name,
             provider = request.provider,
             httpMethod = request.httpMethod,
-            encryptedUrl = hashedUrl,
+            encryptedUrl = encryptedUrl,
             requestBody = request.requestBody,
             checkIntervalSeconds = request.checkIntervalSec,
             failureThreshold = request.failureThreshold,
@@ -191,6 +190,30 @@ class MonitorService(
 
     @Transactional
     fun updateMonitor(monitorId: Long, request: UpdateMonitorRequest): UpdateMonitorResponse {
+        val encryptedUrl = cryptoUtil.encrypt(request.url)
+
+        val monitor = monitorFacade.findByMonitorId(monitorId)
+
+        // monitor
+        monitor.update(
+            name = request.name,
+            httpMethod = request.httpMethod,
+            encryptedUrl = encryptedUrl,
+            requestBody = request.requestBody,
+            checkIntervalSeconds = request.checkIntervalSec,
+            failureThreshold = request.failureThreshold,
+            recoveryThreshold = request.recoveryThreshold,
+            timeoutMs = request.timeoutMs,
+            latencyWarnMs = request.latencyWarnMs,
+            enabled = true
+        )
+
+        monitorFacade.update(monitor)
+
         TODO()
+
+        return UpdateMonitorResponse(
+            id = monitor.id
+        )
     }
 }
