@@ -34,9 +34,11 @@ class MonitorController(
 
     @GetMapping("/{monitorId}/settings")
     fun getMonitorConfig(
-        @PathVariable("monitorId") monitorId: String,
+        @PathVariable("monitorId") monitorId: Long,
     ): ResponseEntity<GetMonitorConfigResponse> {
-        TODO()
+        return ResponseEntity.ok(
+            monitorService.getMonitorConfig(monitorId)
+        )
     }
 
     @DeleteMapping( "/{monitorId}")

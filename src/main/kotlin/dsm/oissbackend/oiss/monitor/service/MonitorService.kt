@@ -18,14 +18,23 @@ import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorJsonPathRule
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorQuota
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorQuotaPattern
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorSchema
+import dsm.oissbackend.oiss.monitor.persistent.entity.enums.SchemaFieldType
 import dsm.oissbackend.oiss.monitor.persistent.entity.enums.SchemaSource
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.CreateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.UpdateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.CreateMonitorResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.CredentialResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.ExpectedSchemaResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.GetMonitorConfigResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.HeaderResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.JsonPathRuleResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.MatchPatternResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.QuotaResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.SchemaFieldResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.UpdateMonitorResponse
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZoneId
 
 @Service
 class MonitorService(
@@ -159,11 +168,11 @@ class MonitorService(
         }
 
         // monitorSchema
-        request.requestBody?.let {
+        request.expectedSchema?.let {
             val monitorSchema = MonitorSchema(
                 monitor = savedMonitor,
                 source = SchemaSource.MANUAL,
-                requestBody = it
+                requestBody = jsonUtils.mapToJson(it.fields.associate { field -> field.path to field.type.name })
             )
             monitorSchemaFacade.save(monitorSchema)
         }
@@ -314,17 +323,112 @@ class MonitorService(
         }
 
         // monitorSchema
-        request.requestBody?.let {
+        request.expectedSchema?.let {
             val monitorSchema = MonitorSchema(
                 monitor = updatedMonitor,
                 source = SchemaSource.MANUAL,
-                requestBody = it
+                requestBody = jsonUtils.mapToJson(it.fields.associate { field -> field.path to field.type.name })
             )
             monitorSchemaFacade.save(monitorSchema)
         }
 
         return UpdateMonitorResponse(
             id = monitor.id
+        )
+    }
+    
+    @Transactional(readOnly = true)
+    fun getMonitorConfig(monitorId: Long): GetMonitorConfigResponse {
+        val monitor = monitorFacade.findByMonitorId(monitorId)
+
+        // MonitorHeader
+        val headers = monitorHeaderFacade.findAllByMonitorId(monitorId).map {
+            HeaderResponse(
+                name = it.name,
+                value = it.value,
+            )
+        }
+
+        // monitorCredential (원문은 내려주지 않고 마스킹 값만)
+        val credential = monitorCredentialFacade.findByMonitorIdOrNull(monitorId)?.let {
+            CredentialResponse(
+                location = it.location,
+                paramName = it.paramName,
+                maskedValue = "****${it.last4}",
+            )
+        }
+
+        // monitorErrorPattern
+        val errorPatterns = monitorErrorPatternFacade.findAllByMonitorId(monitorId).map {
+            MatchPatternResponse(
+                matchType = it.matchType,
+                pattern = it.pattern,
+            )
+        }
+
+        // monitorJsonPathRule
+        val jsonPathRules = monitorJsonPathRuleFacade.findAllByMonitorId(monitorId).map {
+            JsonPathRuleResponse(
+                path = it.path,
+                operator = it.operator,
+                expected = it.expected,
+            )
+        }
+
+        // monitorSchema ({ path: type } JSON으로 저장됨)
+        val expectedSchema = monitorSchemaFacade.findByMonitorIdOrNull(monitorId)?.let { schema ->
+            val fields = jsonUtils.jsonToMap(schema.requestBody).orEmpty().map { (path, type) ->
+                SchemaFieldResponse(
+                    path = path.toString(),
+                    type = SchemaFieldType.valueOf(type.toString()),
+                )
+            }
+
+            ExpectedSchemaResponse(
+                source = schema.source,
+                generatedAt = schema.createdAt.atZone(ZoneId.systemDefault()).toOffsetDateTime(),
+                fields = fields,
+            )
+        }
+
+        // monitorQuota + monitorQuotaPattern
+        val quota = monitorQuotaFacade.findByMonitorIdOrNull(monitorId)?.let { quota ->
+            val exhaustedPatterns = monitorQuotaPatternFacade.findAllByMonitorId(monitorId).map {
+                MatchPatternResponse(
+                    matchType = it.matchType,
+                    pattern = it.pattern,
+                )
+            }
+
+            QuotaResponse(
+                dailyLimit = quota.dailyLimit,
+                costPerRequest = quota.costPerRequest,
+                resetTime = quota.resetTime,
+                resetTimezone = quota.resetTimezone,
+                exhaustedHttpStatuses = quota.exhaustedHttpStatuses,
+                exhaustedPatterns = exhaustedPatterns,
+            )
+        }
+
+        return GetMonitorConfigResponse(
+            id = monitor.id,
+            enabled = monitor.enabled,
+            name = monitor.name,
+            provider = monitor.provider,
+            httpMethod = monitor.httpMethod,
+            url = cryptoUtil.decrypt(monitor.encryptedUrl),
+            requestBody = monitor.requestBody,
+            headers = headers,
+            credential = credential,
+            checkIntervalSec = monitor.checkIntervalSeconds,
+            failureThreshold = monitor.failureThreshold,
+            recoveryThreshold = monitor.recoveryThreshold,
+            timeoutMs = monitor.timeoutMs,
+            latencyWarnMs = monitor.latencyWarnMs,
+            errorPatterns = errorPatterns,
+            jsonPathRules = jsonPathRules,
+            expectedSchema = expectedSchema,
+            quota = quota,
         )
     }
 }
