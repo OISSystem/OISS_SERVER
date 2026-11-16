@@ -208,9 +208,120 @@ class MonitorService(
             enabled = true
         )
 
-        monitorFacade.update(monitor)
+        val updatedMonitor = monitorFacade.update(monitor)
 
-        TODO()
+        // MonitorHeader
+        monitorHeaderFacade.deleteAllByMonitorId(monitorId)
+
+        val monitorHeaders = mutableListOf<MonitorHeader>()
+
+        request.headers.forEachIndexed { index, header ->
+            val header = MonitorHeader(
+                name = header.name,
+                value = header.value,
+                monitor = updatedMonitor,
+                sortOrder = index,
+            )
+
+            monitorHeaders.add(header)
+        }
+        monitorHeaderFacade.saveAll(monitorHeaders)
+
+        // monitorCredential
+        monitorCredentialFacade.deleteByMonitorId(monitorId)
+
+        request.credential?.let {
+            val encryptedValue = cryptoUtil.encrypt(it.value)
+
+            val monitorCredential = MonitorCredential(
+                monitor = updatedMonitor,
+                location = it.location,
+                paramName = it.paramName,
+                encryptedValue = encryptedValue.toByteArray(),
+                last4 = it.value.takeLast(4)
+            )
+
+            monitorCredentialFacade.save(monitorCredential)
+        }
+
+        // monitorErrorPattern
+        monitorErrorPatternFacade.deleteAllByMonitorId(monitorId)
+
+        val monitorErrorPatterns = mutableListOf<MonitorErrorPattern>()
+
+        request.errorPatterns.forEach {
+            val ErrorPattern = MonitorErrorPattern(
+                monitor = updatedMonitor,
+                matchType = it.matchType,
+                pattern = it.pattern,
+            )
+
+            monitorErrorPatterns.add(ErrorPattern)
+        }
+
+        monitorErrorPatternFacade.saveAll(monitorErrorPatterns)
+
+        // monitorQuotaPattern
+        monitorQuotaPatternFacade.deleteAllByMonitorId(monitorId)
+
+        val monitorQuotaPatterns = mutableListOf<MonitorQuotaPattern>()
+
+        request.quota?.exhaustedPatterns?.let {
+            it.forEach {
+                val QuotaPattern = MonitorQuotaPattern(
+                    monitor = updatedMonitor,
+                    matchType = it.matchType,
+                    pattern = it.pattern,
+                )
+
+                monitorQuotaPatterns.add(QuotaPattern)
+            }
+
+            monitorQuotaPatternFacade.saveAll(monitorQuotaPatterns)
+        }
+
+        // monitorJsonPathRule
+        monitorJsonPathRuleFacade.deleteAllByMonitorId(monitorId)
+
+        val monitorJsonPathRules = mutableListOf<MonitorJsonPathRule>()
+
+        request.jsonPathRules.forEachIndexed { index, rule ->
+            val jsonPathRule = MonitorJsonPathRule(
+                monitor = updatedMonitor,
+                path = rule.path,
+                operator = rule.operator,
+                expected = rule.expected,
+                sortOrder = index
+            )
+
+            monitorJsonPathRules.add(jsonPathRule)
+        }
+
+        monitorJsonPathRuleFacade.saveAll(monitorJsonPathRules)
+
+        // monitorQuota
+        request.quota?.let {
+            val monitorQuota = MonitorQuota(
+                monitor = updatedMonitor,
+                dailyLimit = it.dailyLimit,
+                costPerRequest = it.costPerRequest,
+                resetTime = it.resetTime,
+                resetTimezone = it.resetTimezone,
+                exhaustedHttpStatuses = it.exhaustedHttpStatuses,
+            )
+
+            monitorQuotaFacade.save(monitorQuota)
+        }
+
+        // monitorSchema
+        request.requestBody?.let {
+            val monitorSchema = MonitorSchema(
+                monitor = updatedMonitor,
+                source = SchemaSource.MANUAL,
+                requestBody = it
+            )
+            monitorSchemaFacade.save(monitorSchema)
+        }
 
         return UpdateMonitorResponse(
             id = monitor.id
