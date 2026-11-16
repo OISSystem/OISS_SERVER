@@ -4,4 +4,6 @@ import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorSchema
 
 interface MonitorSchemaRepositoryCustom {
     fun findByMonitorId(monitorId: Long): MonitorSchema?
+
+    fun deleteByMonitorId(monitorId: Long): Long
 }

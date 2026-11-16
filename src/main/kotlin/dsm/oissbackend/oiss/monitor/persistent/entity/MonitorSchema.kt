@@ -27,7 +27,7 @@ class MonitorSchema(
     @Column(name = "source", nullable = false)
     val source: SchemaSource,
 
-    @Column(name = "request_body", nullable = false)
+    @Column(name = "request_body", columnDefinition = "TEXT", nullable = false)
     val requestBody: String,
 ) {
 

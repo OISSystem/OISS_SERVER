@@ -4,6 +4,7 @@ import dsm.oissbackend.oiss.monitor.exception.MonitorQuotaNotFoundException
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorQuota
 import dsm.oissbackend.oiss.monitor.persistent.repository.MonitorQuotaRepository
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class MonitorQuotaFacade(
@@ -29,7 +30,8 @@ class MonitorQuotaFacade(
         return monitorQuotaRepository.save(monitorQuota)
     }
 
+    @Transactional
     fun deleteByMonitorId(monitorId: Long) {
-        monitorQuotaRepository.deleteById(monitorId)
+        monitorQuotaRepository.deleteByMonitorId(monitorId)
     }
 }

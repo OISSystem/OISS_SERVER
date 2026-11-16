@@ -15,4 +15,11 @@ class MonitorSchemaRepositoryImpl(
             .where(monitorSchema.monitorId.eq(monitorId))
             .fetchOne()
     }
+
+    override fun deleteByMonitorId(monitorId: Long): Long {
+        return queryFactory
+            .delete(monitorSchema)
+            .where(monitorSchema.monitorId.eq(monitorId))
+            .execute()
+    }
 }

@@ -309,6 +309,8 @@ class MonitorService(
         monitorJsonPathRuleFacade.saveAll(monitorJsonPathRules)
 
         // monitorQuota
+        monitorQuotaFacade.deleteByMonitorId(monitorId)
+
         request.quota?.let {
             val monitorQuota = MonitorQuota(
                 monitor = updatedMonitor,
@@ -323,6 +325,10 @@ class MonitorService(
         }
 
         // monitorSchema
+        if (request.expectedSchema != null || request.resetSchema) {
+            monitorSchemaFacade.deleteByMonitorId(monitorId)
+        }
+
         request.expectedSchema?.let {
             val monitorSchema = MonitorSchema(
                 monitor = updatedMonitor,

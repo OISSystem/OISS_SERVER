@@ -4,6 +4,7 @@ import dsm.oissbackend.oiss.monitor.exception.MonitorSchemaNotFoundException
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorSchema
 import dsm.oissbackend.oiss.monitor.persistent.repository.MonitorSchemaRepository
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class MonitorSchemaFacade(
@@ -29,7 +30,8 @@ class MonitorSchemaFacade(
         return monitorSchemaRepository.save(monitorSchema)
     }
 
+    @Transactional
     fun deleteByMonitorId(monitorId: Long) {
-        monitorSchemaRepository.deleteById(monitorId)
+        monitorSchemaRepository.deleteByMonitorId(monitorId)
     }
 }

@@ -6,17 +6,19 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.MapsId
+import jakarta.persistence.Table
 
 @Entity
+@Table(name = "tbl_monitor_quota_pattern")
 class MonitorQuotaPattern(
 
-    @MapsId
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "monitor_id")
+    @JoinColumn(name = "monitor_id", nullable = false)
     val monitor: Monitor,
 
     @Enumerated(EnumType.STRING)
@@ -28,5 +30,7 @@ class MonitorQuotaPattern(
 ) {
 
     @Id
-    val monitorId: Long = 0
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", columnDefinition = "BIGINT", updatable = false)
+    val id: Long = 0
 }

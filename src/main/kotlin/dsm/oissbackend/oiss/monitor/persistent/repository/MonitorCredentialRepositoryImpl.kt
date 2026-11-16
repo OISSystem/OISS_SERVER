@@ -15,4 +15,11 @@ class MonitorCredentialRepositoryImpl(
             .where(monitorCredential.monitorId.eq(monitorId))
             .fetchOne()
     }
+
+    override fun deleteByMonitorId(monitorId: Long): Long {
+        return queryFactory
+            .delete(monitorCredential)
+            .where(monitorCredential.monitorId.eq(monitorId))
+            .execute()
+    }
 }

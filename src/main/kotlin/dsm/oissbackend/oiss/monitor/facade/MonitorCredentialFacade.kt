@@ -4,6 +4,7 @@ import dsm.oissbackend.oiss.monitor.exception.MonitorCredentialNotFoundException
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorCredential
 import dsm.oissbackend.oiss.monitor.persistent.repository.MonitorCredentialRepository
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class MonitorCredentialFacade(
@@ -29,7 +30,8 @@ class MonitorCredentialFacade(
         return monitorCredentialRepository.save(monitorCredential)
     }
 
+    @Transactional
     fun deleteByMonitorId(monitorId: Long) {
-        monitorCredentialRepository.deleteById(monitorId)
+        monitorCredentialRepository.deleteByMonitorId(monitorId)
     }
 }
