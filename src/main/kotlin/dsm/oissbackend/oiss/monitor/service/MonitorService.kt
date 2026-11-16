@@ -18,6 +18,7 @@ import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorJsonPathRule
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorQuota
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorQuotaPattern
 import dsm.oissbackend.oiss.monitor.persistent.entity.MonitorSchema
+import dsm.oissbackend.oiss.monitor.persistent.entity.enums.MonitorStatus
 import dsm.oissbackend.oiss.monitor.persistent.entity.enums.SchemaFieldType
 import dsm.oissbackend.oiss.monitor.persistent.entity.enums.SchemaSource
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.CreateMonitorRequest
@@ -26,14 +27,18 @@ import dsm.oissbackend.oiss.monitor.presentation.dto.response.CreateMonitorRespo
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.CredentialResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.ExpectedSchemaResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.GetMonitorConfigResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.GetMonitorsResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.HeaderResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.JsonPathRuleResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.MatchPatternResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.MonitorListItemResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.MonitorSummaryResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.QuotaResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.SchemaFieldResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.UpdateMonitorResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.OffsetDateTime
 import java.time.ZoneId
 
 @Service
@@ -435,6 +440,52 @@ class MonitorService(
             jsonPathRules = jsonPathRules,
             expectedSchema = expectedSchema,
             quota = quota,
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun getMonitors(
+        offset: Int,
+        limit: Int,
+        status: MonitorStatus?,
+        provider: String?,
+        keyword: String?,
+    ): GetMonitorsResponse {
+        val monitors = monitorFacade.findAllByFilter(
+            offset = offset.toLong(),
+            limit = limit.toLong(),
+            status = status,
+            provider = provider,
+            keyword = keyword,
+        ).map {
+            MonitorListItemResponse(
+                id = it.id,
+                name = it.name,
+                provider = it.provider,
+                status = MonitorStatus.PAUSED,
+                availability24h = null,
+                p95ResponseTimeMs = null,
+                lastCheckedAt = null,
+                checkIntervalSec = it.checkIntervalSeconds,
+                checkDelayed = null,
+            )
+        }
+
+        val summary = MonitorSummaryResponse(
+            total = monitorFacade.count().toInt(),
+            healthy = null,
+            warning = null,
+            down = null,
+            paused = monitorFacade.countByEnabled(false).toInt(),
+            quotaExhausted = null,
+            pending = null,
+            ongoingIncidents = null,
+        )
+
+        return GetMonitorsResponse(
+            serverTime = OffsetDateTime.now(),
+            summary = summary,
+            monitors = monitors,
         )
     }
 }

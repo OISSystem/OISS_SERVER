@@ -1,9 +1,11 @@
 package dsm.oissbackend.oiss.monitor.presentation
 
+import dsm.oissbackend.oiss.monitor.persistent.entity.enums.MonitorStatus
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.CreateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.request.UpdateMonitorRequest
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.CreateMonitorResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.GetMonitorConfigResponse
+import dsm.oissbackend.oiss.monitor.presentation.dto.response.GetMonitorsResponse
 import dsm.oissbackend.oiss.monitor.presentation.dto.response.UpdateMonitorResponse
 import dsm.oissbackend.oiss.monitor.service.MonitorService
 import org.springframework.http.ResponseEntity
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalTime
 
@@ -29,6 +32,19 @@ class MonitorController(
     ): ResponseEntity<CreateMonitorResponse> {
         return ResponseEntity.ok(
             monitorService.createMonitor(request)
+        )
+    }
+
+    @GetMapping
+    fun getMonitors(
+        @RequestParam offset: Int,
+        @RequestParam limit: Int,
+        @RequestParam(required = false) status: MonitorStatus?,
+        @RequestParam(required = false) provider: String?,
+        @RequestParam(required = false) keyword: String?,
+    ): ResponseEntity<GetMonitorsResponse> {
+        return ResponseEntity.ok(
+            monitorService.getMonitors(offset, limit, status, provider, keyword)
         )
     }
 
