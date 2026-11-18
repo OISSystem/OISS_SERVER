@@ -69,7 +69,7 @@ data class QuotaResponse(
     val dailyLimit: Int,
     val costPerRequest: Int,
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     val resetTime: LocalTime,
     val resetTimezone: String,
     val exhaustedHttpStatuses: List<Int>,
