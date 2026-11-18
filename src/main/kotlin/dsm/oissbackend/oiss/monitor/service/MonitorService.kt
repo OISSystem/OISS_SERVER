@@ -219,7 +219,7 @@ class MonitorService(
             recoveryThreshold = request.recoveryThreshold,
             timeoutMs = request.timeoutMs,
             latencyWarnMs = request.latencyWarnMs,
-            enabled = true
+            enabled = monitor.enabled,
         )
 
         val updatedMonitor = monitorFacade.update(monitor)
