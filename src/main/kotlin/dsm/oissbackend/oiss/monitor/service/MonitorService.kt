@@ -211,6 +211,7 @@ class MonitorService(
         // monitor
         monitor.update(
             name = request.name,
+            provider = request.provider,
             httpMethod = request.httpMethod,
             encryptedUrl = encryptedUrl,
             requestBody = request.requestBody,

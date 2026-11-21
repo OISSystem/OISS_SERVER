@@ -53,6 +53,7 @@ class Monitor(
 
     fun update(
         name: String,
+        provider: String,
         httpMethod: HttpMethod,
         encryptedUrl: String,
         requestBody: String?,
@@ -64,6 +65,7 @@ class Monitor(
         enabled: Boolean,
     ) {
         this.name = name
+        this.provider = provider
         this.httpMethod = httpMethod
         this.encryptedUrl = encryptedUrl
         this.requestBody = requestBody
